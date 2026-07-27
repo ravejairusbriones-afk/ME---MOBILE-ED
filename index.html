@@ -224,7 +224,7 @@
         .flashcard-box:hover { border-color: var(--text-secondary); box-shadow: 0 12px 40px var(--shadow-color); }
         .flashcard-label { position: absolute; top: 16px; left: 20px; font-size: 0.75rem; color: var(--text-secondary); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
         .flashcard-text { font-size: 1.5rem; font-weight: 500; line-height: 1.5; }
-        .flashcard-actions { display: flex; gap: 16px; align-items: center; margin-top: 8px; }
+        .flashcard-actions { display: flex; gap: 16px; align-items: center; margin-top: 8px; flex-wrap: wrap; justify-content: center; }
         .flashcard-actions button:disabled { opacity: 0.4; cursor: not-allowed; }
 
         #statistics-view { display: none; flex: 1; overflow-y: auto; padding: 0 40px 40px; animation: fadeIn 0.3s ease; }
@@ -444,6 +444,7 @@
                         <button class="btn-ghost" id="fc-prev-btn" onclick="prevFlashcard()">← Previous</button>
                         <button class="btn-primary" id="fc-flip-btn" onclick="toggleFlashcardFlip()">Show Answer</button>
                         <button class="btn-primary" id="fc-next-btn" onclick="nextFlashcard()">Next →</button>
+                        <button class="btn-ghost" onclick="shuffleFlashcards()">🔀 Shuffle</button>
                     </div>
                 </div>
             </div>
@@ -612,7 +613,8 @@
         function startQuiz(id) {
             const p = projects.find(x => x.id === id);
             if (!p || !p.items.length) return;
-            quizState.items = p.items;
+            // Create a shallow copy of items so shuffling doesn't mutate the original project array
+            quizState.items = [...p.items];
             quizState.currentIndex = 0;
             quizState.total = p.items.length;
             quizState.correct = 0;
@@ -737,6 +739,20 @@
         function nextFlashcard() {
             if (quizState.currentIndex < quizState.total - 1) { quizState.currentIndex++;
                 renderFlashcard(quizState.currentIndex); }
+        }
+
+        // ==========================================
+        // SHUFFLE FLASHCARDS FEATURE
+        // ==========================================
+        function shuffleFlashcards() {
+            // Fisher-Yates (Knuth) Shuffle algorithm
+            for (let i = quizState.items.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [quizState.items[i], quizState.items[j]] = [quizState.items[j], quizState.items[i]];
+            }
+            // Reset index to start and render the first card of the shuffled array
+            quizState.currentIndex = 0;
+            renderFlashcard(0);
         }
 
         function showDashboard() {
