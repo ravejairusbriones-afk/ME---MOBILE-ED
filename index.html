@@ -250,7 +250,14 @@
         /* MOBILE VIEW OPTIMIZATION           */
         /* ================================== */
         @media (max-width: 768px) {
-            body { flex-direction: column; }
+            /* Enable scrolling and adapt body height for mobile */
+            body {
+                flex-direction: column;
+                height: auto;
+                min-height: 100vh;
+                overflow-y: auto; 
+                overflow-x: hidden;
+            }
             .sidebar {
                 width: 100%; height: auto; flex-direction: row; padding: 8px 16px;
                 position: fixed; bottom: 0; top: auto; border-right: none; border-top: 1px solid var(--border-color); z-index: 100; justify-content: space-around;
@@ -261,6 +268,7 @@
             .nav-item svg { width: 22px; height: 22px; }
             .user-profile { display: none; }
 
+            /* Allow main content to grow naturally */
             .main-content {
                 padding: 0 16px; padding-bottom: 80px; height: auto; min-height: 100vh; overflow-y: visible;
             }
@@ -275,7 +283,8 @@
 
             .study-options { grid-template-columns: 1fr; max-width: 100%; margin-bottom: 32px; }
 
-            .modal-overlay { left: 0; padding: 16px; }
+            /* Ensure modals are scrollable if keyboard opens or screen is short */
+            .modal-overlay { left: 0; padding: 16px; overflow-y: auto; }
             .modal-content { width: 100%; padding: 24px 20px; }
 
             #quiz-view { left: 0; padding: 16px; padding-bottom: 80px; }
@@ -288,7 +297,8 @@
             .flashcard-box { padding: 24px; min-height: 200px; }
             .flashcard-text { font-size: 1.1rem; }
 
-            #statistics-view { padding: 0 16px 80px; }
+            /* Allow statistics view to scroll properly on mobile */
+            #statistics-view { padding: 0 16px 80px; overflow-y: visible; height: auto; }
             .stats-header { flex-direction: column; align-items: flex-start; gap: 8px; }
             .stats-header h2 { font-size: 1.5rem; }
             .stats-global-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
